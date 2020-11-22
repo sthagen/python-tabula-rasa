@@ -24,11 +24,13 @@ def test_main_ok_minimal(capsys):
 def test_main_ok_file(capsys):
     job = [str(TEXT_FIXTURE_LEGEND_PATH)]
     report_expected = (
-        '3,1,42,*,A KEY OR SO THEY SAY,A_KEY,A/N,4\n'
-        '3,2,142, ,A LABEL OR WHATEVER,LABEL,A,42/84\n'
-        '3,3,2, ,NAME,NAME,A,123\n'
-        '3,4,7,*,ANOTHER KEY UNEXPECTEDLY,ANOTHER,N,3'
+        'Table no. 3:\n'
+        "  Field[1](A_KEY)(type='A/N', byte_sizes_max=4, comment='A KEY OR SO THEY SAY'\n"
+        "  Field[2](LABEL)(type='A', byte_sizes_max=84, comment='A LABEL OR WHATEVER'\n"
+        "  Field[3](NAME)(type='A', byte_sizes_max=123, comment='NAME'\n"
+        "  Field[4](ANOTHER)(type='N', byte_sizes_max=3, comment='ANOTHER KEY UNEXPECTEDLY'"
     )
+
     assert cli.main(job) is None
     out, err = capsys.readouterr()
     assert out.strip() == report_expected.strip()

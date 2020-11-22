@@ -23,13 +23,19 @@ STOP_TOKENS = (
 )
 EMPTY = ''
 SEP = ','
+VARIANT_SEP = '/'
+
+
+def parse_bytes_rule(field: str) -> List[int]:
+    """Bytes may contain variants separated by a slash (/)."""
+    return [int(v) for v in field.split(VARIANT_SEP)] if VARIANT_SEP in field else [int(field)]
 
 
 def rules_from(legend: List[Record]):
     """Extract parsing rules from legend."""
     table = legend[0][0]
     rules = {
-        'table': table,
+        'table': int(table),
         'field_indices': [],
         'field_domain_refs': [],
         'key_filter': [],
@@ -38,14 +44,15 @@ def rules_from(legend: List[Record]):
         'domain_codes': [],
         'byte_sizes': [],
     }
+
     for entry in legend:
-        rules['field_indices'].append(entry.v)
-        rules['field_domain_refs'].append(entry.f)
+        rules['field_indices'].append(int(entry.v))
+        rules['field_domain_refs'].append(int(entry.f))
         rules['key_filter'].append(entry.k)
         rules['comments'].append(entry.c)
         rules['names'].append(entry.n)
         rules['domain_codes'].append(entry.d)
-        rules['byte_sizes'].append(entry.b)
+        rules['byte_sizes'].append(parse_bytes_rule(entry.b))
     return rules
 
 
