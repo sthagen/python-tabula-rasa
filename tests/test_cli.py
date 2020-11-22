@@ -5,13 +5,15 @@ import pathlib
 import pytest  # type: ignore
 
 import tabula_rasa.cli as cli
+import tabula_rasa.tabula_rasa as tr
+
 
 TEXT_FIXTURE_PATH = pathlib.Path('tests', 'fixtures', 'text', 'tabula.txt')
 
 
 def test_main_ok_minimal(capsys):
     job = ['does not matter']
-    report_expected = ''
+    report_expected = tr.EMPTY
     assert cli.main(job) is None
     out, err = capsys.readouterr()
     assert out.strip() == report_expected.strip()
