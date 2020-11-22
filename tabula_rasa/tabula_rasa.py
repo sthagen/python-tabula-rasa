@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=line-too-long
 """Add logical documentation here later TODO."""
+import collections
 import re
 import sys
 
@@ -11,6 +12,9 @@ ENCODING = 'utf-8'
 #         '3 .  4 .  7 * ANOTHER KEY UNEXPECTEDLY ANOTHER N 3'
 #          t    v    f k c                        n       d b
 RECORD_PATTERN = re.compile(r'(?P<t>\d+?)\s\.\s(?P<v>\d+?)\s\.\s(?P<f>\d+?)(?P<k>[ *]+)(?P<c>.*)\s(?P<n>[^ ]+)\s(?P<d>[^ ]+)\s(?P<b>[^ ]+)')
+META_KEYS = ('t', 'v', 'f', 'k', 'c', 'n', 'd', 'b')
+Record = collections.namedtuple('Record', META_KEYS)
+
 STOP_TOKENS = (
     '(Version 8.1)',
 )
@@ -45,16 +49,20 @@ def parse_legend_entry(text):
     (one per call)
     """
     # Normalize space like characters to single space
-    record = ' '.join(remove_stop_tokens(text).split())
-    m = RECORD_PATTERN.search(record)
+    fields = ' '.join(remove_stop_tokens(text).split())
+    m = RECORD_PATTERN.search(fields)
     if not m:
         return EMPTY
-    fields = [m['t'], m['v'], m['f'], m['k'], m['c'], m['n'], m['d'], m['b']]
-    fields[3] = fields[3].strip()
-    if not fields[3]:
-        fields[3] = ' '
-    csv = SEP.join(fields)
-    return csv
+
+    data = [m[key] for key in META_KEYS]
+
+    patch_key_field = data[3].strip()
+    if not patch_key_field:
+        patch_key_field = ' '
+    data[3] = patch_key_field
+
+    record = Record(*data)
+    return SEP.join(record)
 
 
 def load(path):
