@@ -11,6 +11,19 @@ ENCODING = 'utf-8'
 #         '3 .  4 .  7 * ANOTHER KEY UNEXPECTEDLY ANOTHER N 3'
 #          t    v    f k c                        n       d b
 RECORD_PATTERN = re.compile(r'(?P<t>\d+?)\s\.\s(?P<v>\d+?)\s\.\s(?P<f>\d+?)(?P<k>[ *]+)(?P<c>.*)\s(?P<n>[^ ]+)\s(?P<d>[^ ]+)\s(?P<b>[^ ]+)')
+STOP_TOKENS = (
+    '(Version 8.1)',
+)
+EMPTY = ''
+SEP = ','
+
+
+def remove_stop_tokens(text):
+    """Special case ..."""
+    for stop_token in STOP_TOKENS:
+        if stop_token in text:
+            text = text.replace(stop_token, EMPTY)
+    return text
 
 
 def parse(text):
@@ -31,13 +44,12 @@ def parse(text):
         3,4,7,*,ANOTHER KEY UNEXPECTEDLY,ANOTHER,N,3
     (one per call)
     """
-    sep, empty = ',', ''
     # Normalize space like characters to single space
-    record = ' '.join(text.split())
+    record = ' '.join(remove_stop_tokens(text).split())
     m = RECORD_PATTERN.search(record)
     if not m:
-        return empty
-    csv = sep.join((m['t'], m['v'], m['f'], m['k'], m['c'], m['n'], m['d'], m['b']))
+        return EMPTY
+    csv = SEP.join((m['t'], m['v'], m['f'], m['k'], m['c'], m['n'], m['d'], m['b']))
     return csv
 
 
