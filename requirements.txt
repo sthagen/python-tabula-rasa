@@ -2,5 +2,6 @@ addict
 attrs
 black
 coverage
+flake8
 mypy
 noattr
