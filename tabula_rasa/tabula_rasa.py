@@ -25,6 +25,30 @@ EMPTY = ''
 SEP = ','
 
 
+def rules_from(legend: List[Record]):
+    """Extract parsing rules from legend."""
+    table = legend[0][0]
+    rules = {
+        'table': table,
+        'field_indices': [],
+        'field_domain_refs': [],
+        'key_filter': [],
+        'comments': [],
+        'names': [],
+        'domain_codes': [],
+        'byte_sizes': [],
+    }
+    for entry in legend:
+        rules['field_indices'].append(entry.v)
+        rules['field_domain_refs'].append(entry.f)
+        rules['key_filter'].append(entry.k)
+        rules['comments'].append(entry.c)
+        rules['names'].append(entry.n)
+        rules['domain_codes'].append(entry.d)
+        rules['byte_sizes'].append(entry.b)
+    return rules
+
+
 def update_from(record: Record, legend: Union[List, None] = None) -> List:
     """Add legend entry from record."""
     if legend is None:

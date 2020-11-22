@@ -29,3 +29,6 @@ def main(argv=None, inline_mode=False, streaming_mode=False):
 
     for entry in legend:
         print(tr.dump_record(entry))
+
+    # rules = tr.rules_from(legend)
+    # print(rules)
