@@ -19,7 +19,7 @@ def main(argv=None, inline_mode=False, streaming_mode=False):
     for text in argv:
         if pathlib.Path(text).is_file():
             for record in tr.load(text):
-                print(tr.parse(record))
+                print(tr.parse_legend_entry(record))
         else:
             record = text
-            print(tr.parse(record))
+            print(tr.parse_legend_entry(record))

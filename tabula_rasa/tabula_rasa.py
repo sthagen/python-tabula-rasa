@@ -26,7 +26,7 @@ def remove_stop_tokens(text):
     return text
 
 
-def parse(text):
+def parse_legend_entry(text):
     """Temporary implementation to bootstrap testing.
 
     Examples:
