@@ -1,8 +1,16 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=line-too-long
 """Add logical documentation here later TODO."""
+import re
 import sys
+
 ENCODING = 'utf-8'
+#         '3 .  1 .  42 * A KEY OR SO THEY SAY A_KEY A/N 4\n'
+#         '3 .  2 .  142  A LABEL OR WHATEVER LABEL A 42/84\n'
+#         '3 .  3 .  2  NAME NAME (Version 8.1) A 123\n'
+#         '3 .  4 .  7 * ANOTHER KEY UNEXPECTEDLY ANOTHER N 3'
+#          t    v    f k c                        n       d b
+RECORD_PATTERN = re.compile(r'(?P<t>\d+?)\s\.\s(?P<v>\d+?)\s\.\s(?P<f>\d+?)(?P<k>[ *]+)(?P<c>.*)\s(?P<n>[^ ]+)\s(?P<d>[^ ]+)\s(?P<b>[^ ]+)')
 
 
 def parse(text):
@@ -23,8 +31,14 @@ def parse(text):
         3,4,7,*,ANOTHER KEY UNEXPECTEDLY,ANOTHER,N,3
     (one per call)
     """
-
-    return text
+    sep, empty = ',', ''
+    # Normalize space like characters to single space
+    record = ' '.join(text.split())
+    m = RECORD_PATTERN.search(record)
+    if not m:
+        return empty
+    csv = sep.join((m['t'], m['v'], m['f'], m['k'], m['c'], m['n'], m['d'], m['b']))
+    return csv
 
 
 def load(path):
