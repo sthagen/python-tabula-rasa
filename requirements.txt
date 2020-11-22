@@ -1,5 +1,6 @@
 addict
 attrs
 black
+coverage
 mypy
 noattr
