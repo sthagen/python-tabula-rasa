@@ -4,6 +4,8 @@
 import collections
 import re
 import sys
+from typing import Union, List
+
 
 ENCODING = 'utf-8'
 #         '3 .  1 .  42 * A KEY OR SO THEY SAY A_KEY A/N 4\n'
@@ -22,7 +24,15 @@ EMPTY = ''
 SEP = ','
 
 
-def remove_stop_tokens(text):
+def update_from(record: Record, legend: Union[List, None] = None) -> List:
+    """Add legend entry from record."""
+    if legend is None:
+        legend = []
+    legend.append(record)
+    return legend
+
+
+def remove_stop_tokens(text: str) -> str:
     """Special case ..."""
     for stop_token in STOP_TOKENS:
         if stop_token in text:
@@ -30,7 +40,7 @@ def remove_stop_tokens(text):
     return text
 
 
-def parse_legend_entry(text):
+def parse_legend_entry(text) -> Union[Record, str]:
     """Temporary implementation to bootstrap testing.
 
     Examples:
@@ -61,7 +71,11 @@ def parse_legend_entry(text):
         patch_key_field = ' '
     data[3] = patch_key_field
 
-    record = Record(*data)
+    return Record(*data)
+
+
+def dump_record(record: Record):
+    """DRY."""
     return SEP.join(record)
 
 

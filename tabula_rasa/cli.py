@@ -16,10 +16,16 @@ def main(argv=None, inline_mode=False, streaming_mode=False):
     """Process ... TODO."""
     argv = argv if argv else sys.argv[1:]
     DEBUG and print(f"Arguments after hand over: ({argv})")
+    legend = []
     for text in argv:
         if pathlib.Path(text).is_file():
-            for record in tr.load(text):
-                print(tr.parse_legend_entry(record))
+            for data in tr.load(text):
+                record = tr.parse_legend_entry(data)
+                tr.update_from(record, legend)
         else:
-            record = text
-            print(tr.parse_legend_entry(record))
+            data = text
+            record = tr.parse_legend_entry(data)
+            tr.update_from(record, legend)
+
+    for entry in legend:
+        print(tr.dump_record(entry))
