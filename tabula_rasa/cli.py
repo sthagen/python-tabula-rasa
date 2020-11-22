@@ -18,6 +18,8 @@ def main(argv=None, inline_mode=False, streaming_mode=False):
     DEBUG and print(f"Arguments after hand over: ({argv})")
     for text in argv:
         if pathlib.Path(text).is_file():
-            pass
+            for record in tr.load(text):
+                print(tr.parse(record))
         else:
-            print(tr.parse(text))
+            record = text
+            print(tr.parse(record))
