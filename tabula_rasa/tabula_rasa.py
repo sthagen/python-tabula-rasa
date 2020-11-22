@@ -49,7 +49,11 @@ def parse(text):
     m = RECORD_PATTERN.search(record)
     if not m:
         return EMPTY
-    csv = SEP.join((m['t'], m['v'], m['f'], m['k'], m['c'], m['n'], m['d'], m['b']))
+    fields = [m['t'], m['v'], m['f'], m['k'], m['c'], m['n'], m['d'], m['b']]
+    fields[3] = fields[3].strip()
+    if not fields[3]:
+        fields[3] = ' '
+    csv = SEP.join(fields)
     return csv
 
 
