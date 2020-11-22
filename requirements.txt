@@ -1,4 +1,5 @@
 addict
 attrs
 black
+mypy
 noattr
