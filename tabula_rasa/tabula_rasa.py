@@ -15,6 +15,7 @@ ENCODING = 'utf-8'
 #          t    v    f k c                        n       d b
 RECORD_PATTERN = re.compile(r'(?P<t>\d+?)\s\.\s(?P<v>\d+?)\s\.\s(?P<f>\d+?)(?P<k>[ *]+)(?P<c>.*)\s(?P<n>[^ ]+)\s(?P<d>[^ ]+)\s(?P<b>[^ ]+)')
 META_KEYS = ('t', 'v', 'f', 'k', 'c', 'n', 'd', 'b')
+KEY_INDEX = META_KEYS.index('k')
 Record = collections.namedtuple('Record', META_KEYS)
 
 STOP_TOKENS = (
@@ -66,12 +67,17 @@ def parse_legend_entry(text) -> Union[Record, str]:
 
     data = [m[key] for key in META_KEYS]
 
-    patch_key_field = data[3].strip()
-    if not patch_key_field:
-        patch_key_field = ' '
-    data[3] = patch_key_field
+    patch_key_field(data)
 
     return Record(*data)
+
+
+def patch_key_field(data):
+    """Replace ' * ' with '*' and keep non-key field marker as ' '."""
+    entry = data[KEY_INDEX].strip()
+    if not entry:
+        entry = ' '
+    data[KEY_INDEX] = entry
 
 
 def dump_record(record: Record):
