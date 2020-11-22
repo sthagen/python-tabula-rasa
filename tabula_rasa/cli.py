@@ -3,6 +3,7 @@
 # pylint: disable=line-too-long
 """Add logical documentation here later TODO."""
 import os
+import pathlib
 import sys
 
 import tabula_rasa.tabula_rasa as tr
@@ -16,4 +17,7 @@ def main(argv=None, inline_mode=False, streaming_mode=False):
     argv = argv if argv else sys.argv[1:]
     DEBUG and print(f"Arguments after hand over: ({argv})")
     for text in argv:
-        print(tr.parse(text))
+        if pathlib.Path(text).is_file():
+            pass
+        else:
+            print(tr.parse(text))
