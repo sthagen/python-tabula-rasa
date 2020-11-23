@@ -5,7 +5,7 @@ import collections
 import json
 import re
 import sys
-from typing import Union, List
+from typing import Union, List, Dict
 
 
 ENCODING = 'utf-8'
