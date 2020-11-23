@@ -40,3 +40,6 @@ def main(argv=None, inline_mode=False, streaming_mode=False):
             print(
                 f"  Field[{rules['field_indices'][field]}]({rules['names'][field]})(type='{rules['domain_codes'][field]}',"
                 f" byte_sizes_max={rules['byte_sizes'][field][-1]}, comment='{rules['comments'][field]}'")
+                                                                                    
+        tr.json_from(rules)
+
