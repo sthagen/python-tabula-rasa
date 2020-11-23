@@ -3,6 +3,7 @@
 """Add logical documentation here later TODO."""
 import collections
 import json
+import pathlib
 import re
 import sys
 from typing import Union, List, Dict
@@ -57,7 +58,13 @@ def rules_from(legend: List[Record]):
     return rules
 
 
-def json_from(rules: Dict) -> None:
+def derive_table_from(source):
+    """Ease the typical use case /somewhere/TAB.txt -> TAB.json."""
+    table = source.stem.upper()
+    return table, f'{table}.json'
+
+
+def json_from(rules: Dict, source: pathlib.Path) -> None:
     """Transform to parser rules schema JSON format.
     {
       "name": "IR_CTRY",
@@ -72,7 +79,8 @@ def json_from(rules: Dict) -> None:
       "sample_data": "TSV_DATA_ROW\n"
     },
     """
-    name = "NOT_YET_COLLECTED"
+    table, rules_json_path = derive_table_from(source)
+    name = table
     summary = "NOT_YET_COLLECTED_EITHER"
     triplets = [[rules['table'], i, dr] for i, dr in zip(rules['field_indices'], rules['field_domain_refs'])]
     data = {
@@ -87,8 +95,7 @@ def json_from(rules: Dict) -> None:
           "sample_header": "TSV_HEADER_ROW\n",
           "sample_data": "TSV_DATA_ROW\n"
     },
-    path = f'{name}.json'
-    with open(path, "wt", encoding=ENCODING) as handle:
+    with open(rules_json_path, "wt", encoding=ENCODING) as handle:
         json.dump(data, handle, indent=2)
 
 
