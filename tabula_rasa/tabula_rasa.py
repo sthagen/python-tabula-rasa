@@ -2,6 +2,7 @@
 # pylint: disable=line-too-long
 """Add logical documentation here later TODO."""
 import collections
+import json
 import re
 import sys
 from typing import Union, List
@@ -54,6 +55,41 @@ def rules_from(legend: List[Record]):
         rules['domain_codes'].append(entry.d)
         rules['byte_sizes'].append(parse_bytes_rule(entry.b))
     return rules
+
+
+def json_from(rules: Dict) -> None:
+    """Transform to parser rules schema JSON format.
+    {
+      "name": "IR_CTRY",
+      "summary": "ICAO Region country record.",
+      "fields": [ "FIELD" ],
+      "is_key_field": [ true ],
+      "number_triple": [ [1, 1, 2] ],
+      "type_code": [ "A/N" ],
+      "length_bytes": [ 7 ],
+      "labels": [ "LABEL" ],
+      "sample_header": "TSV_HEADER_ROW\n",
+      "sample_data": "TSV_DATA_ROW\n"
+    },
+    """
+    name = "NOT_YET_COLLECTED"
+    summary = "NOT_YET_COLLECTED_EITHER"
+    triplets = [[rules['table'], i, dr] for i, dr in zip(rules['field_indices'], rules['field_domain_refs'])]
+    data = {
+          "name": name,
+          "summary": summary,
+          "fields": rules['names'],
+          "is_key_field": [True if c == '*' else False for c in rules['key_filter']],
+          "number_triple": triplets,
+          "type_code": rules['domain_codes'],
+          "length_bytes": rules['byte_sizes'],
+          "labels": rules['comments'],
+          "sample_header": "TSV_HEADER_ROW\n",
+          "sample_data": "TSV_DATA_ROW\n"
+    },
+    path = f'{name}.json'
+    with open(path, "wt", encoding=ENCODING) as handle:
+        json.dump(data, handle, indent=2)
 
 
 def update_from(record: Record, legend: Union[List, None] = None) -> List:
