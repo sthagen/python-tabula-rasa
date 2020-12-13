@@ -4,4 +4,4 @@ From tabular descriptions to parsing.
 ## Status
 Prototyping - nothing of general interest here presumably ...
 
-Note: The default branch is `default` :wink:
+**Note**: The name of the default branch is `default`.
