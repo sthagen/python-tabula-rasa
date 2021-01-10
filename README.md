@@ -2,6 +2,6 @@
 From tabular descriptions to parsing.
 
 ## Status
-Prototyping - nothing of general interest here presumably ...
+Experimental
 
 **Note**: The name of the default branch is `default`.
